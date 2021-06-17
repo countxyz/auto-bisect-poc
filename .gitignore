@@ -39,3 +39,30 @@
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity
+
+# env files
+.env
+.env.test
+.env.development
+
+# Ignore dotfiles
+!.keep
+*.backup
+*.bak
+*.bkp
+*.orig
+*.pid
+*.swp
+*~
+._*
+.aprc
+.byebug_history
+.directory
+.DS_Store
+.idea
+.project
+.rvmrc
+.sass-cache/*
+.vscode/
+.yardoc
+.~lock*

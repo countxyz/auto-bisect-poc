@@ -1,0 +1,19 @@
+---
+
+version: '3.9'
+services:
+  postgres:
+    image: postgres:9.6
+    container_name: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DATABASE: auto_bisect_poc_development
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+volumes:
+  db_data:
+    driver: local
+    name: db_data

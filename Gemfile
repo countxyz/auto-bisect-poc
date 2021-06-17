@@ -11,7 +11,6 @@ gem 'sass-rails', '~> 6.0.0', require: false
 gem 'webpacker', '~>5.x'
 
 group :development, :test do
-  gem 'dotenv-rails', '~> 2.7', require: 'dotenv/rails-now'
   gem 'rspec-rails', '~> 5.0.1'
 end
 
