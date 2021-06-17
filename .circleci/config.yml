@@ -6,6 +6,7 @@ jobs:
       - image: cimg/ruby:2.6.6-node
       - image: postgres:9.6
         environment:
+          POSTGRES_DATABASE: auto_bisect_poc_test
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: password
     environment:
