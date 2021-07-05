@@ -12,32 +12,12 @@ jobs:
     environment:
       RAILS_ENV: test
     parameters:
-      rspec_defaults:
-        type: boolean
-        default: true
-      rspec_seed_option:
-        type: boolean
-        default: false
-      rspec_seed_number:
-        type: integer
-        default: 1
+      rspec_seed_arg:
+        type: string
+        default: ''
     steps:
-      - when:
-          condition:
-            equal: [<< parameters.rspec_defaults >>, true]
-          steps:
-            - checkout
-            - run: gem install bundler:1.17.3
-            - run: bundle install --path vendor/bundle
-            - run: bundle exec rake db:create
-            - run: bundle exec rspec
-      - when:
-          condition:
-            equal: [<< parameters.rspec_seed_option >>, true]
-          steps:
-            - checkout
-            - run: gem install bundler:1.17.3
-            - run: bundle install --path vendor/bundle
-            - run: bundle exec rake db:create
-            - run: bundle exec rspec --seed << parameters.rspec_seed_number >>
-
+      - checkout
+      - run: gem install bundler:1.17.3
+      - run: bundle install --path vendor/bundle
+      - run: bundle exec rake db:create
+      - run: bundle exec rspec << parameters.rspec_seed_arg >>
