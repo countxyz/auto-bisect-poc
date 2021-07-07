@@ -2,7 +2,7 @@
 version: 2.1
 
 jobs:
-  build:
+  run-rspec:
     docker:
       - image: cimg/ruby:2.6.6-node
       - image: postgres:9.6
@@ -12,10 +12,6 @@ jobs:
           POSTGRES_PASSWORD: password
     environment:
       RAILS_ENV: test
-    parameters:
-      rspec_seed_arg:
-        type: string
-        default: ''
     steps:
       - checkout
       - run: gem install bundler:1.17.3
@@ -30,4 +26,11 @@ jobs:
             - vendor/bundle
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
       - run: bundle exec rake db:create
-      - run: bundle exec rspec << parameters.rspec_seed_arg >>
+      - run: bundle exec rspec $RSPEC_SEED_ARG
+
+workflows:
+  test-workflow:
+    jobs:
+      - run-rspec:
+          context:
+            - rspec-options
