@@ -1,8 +1,16 @@
 ---
 version: 2.1
 
+parameters:
+  tshoot_rspec:
+    type: boolean
+    default: false
+  tshoot_options:
+    type: string
+    default: '--seed 1 --bisect'
+
 jobs:
-  run-rspec:
+  run_rspec:
     docker:
       - image: cimg/ruby:2.6.6-node
       - image: postgres:9.6
@@ -26,11 +34,31 @@ jobs:
             - vendor/bundle
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
       - run: bundle exec rake db:create
-      - run: bundle exec rspec $RSPEC_SEED_ARG
+      - run: bundle exec rspec
+  run_rspec_with_tshoot_options:
+    docker:
+      - image: cimg/ruby:2.6.6-node
+      - image: postgres:9.6
+        environment:
+          POSTGRES_DATABASE: auto_bisect_poc_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+    environment:
+      RAILS_ENV: test
+    steps:
+      - checkout
+      - run: gem install bundler:1.17.3
+      - run: bundle install --path vendor/bundle
+      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run: bundle exec rake db:create
+      - run: bundle exec rspec << pipeline.parameters.tshoot_options >>
 
 workflows:
-  test-workflow:
+  rspec:
+    unless: << pipeline.parameters.tshoot_rspec >>
     jobs:
-      - run-rspec:
-          context:
-            - rspec-options
+      - run_rspec
+  rspec_with_tshoot_options:
+    when: << pipeline.parameters.tshoot_rspec >>
+    jobs:
+      - run_rspec_with_tshoot_options
