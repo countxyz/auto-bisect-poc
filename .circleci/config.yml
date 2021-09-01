@@ -1,6 +1,16 @@
 ---
 version: 2.1
 
+executors:
+  docker_defaults:
+    docker:
+      - image: cimg/ruby:2.6.6-node
+      - image: postgres:9.6
+        environment:
+          POSTGRES_DATABASE: auto_bisect_poc_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+
 parameters:
   tshoot_rspec:
     type: boolean
@@ -11,13 +21,7 @@ parameters:
 
 jobs:
   run_rspec:
-    docker:
-      - image: cimg/ruby:2.6.6-node
-      - image: postgres:9.6
-        environment:
-          POSTGRES_DATABASE: auto_bisect_poc_test
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
+    executor: docker_defaults
     environment:
       RAILS_ENV: test
     steps:
@@ -36,13 +40,7 @@ jobs:
       - run: bundle exec rake db:create
       - run: bundle exec rspec
   run_rspec_with_tshoot_options:
-    docker:
-      - image: cimg/ruby:2.6.6-node
-      - image: postgres:9.6
-        environment:
-          POSTGRES_DATABASE: auto_bisect_poc_test
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
+    executor: docker_defaults
     environment:
       RAILS_ENV: test
     steps:
